@@ -32,4 +32,5 @@ describe("ship functions", () => {
   test("ship not spawned in sunk", () => {
     expect(testCarrier.isSunk()).toBe(false)
   })
+
 });
