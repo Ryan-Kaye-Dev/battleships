@@ -66,4 +66,30 @@ describe("gameboard functions", () => {
     expect(testBoard.board[0][0].isHit).toBe(true);
     expect(testCarrier.hits).toBe(1);
   });
+
+  test("Adds missed attack to missedAttacks array", () => {
+    testBoard.receiveAttack([0,0]);
+    expect(testBoard.missedAttacks).toEqual([[0,0]]);
+  });
+
+  test("Doesn't add missed attack to missedAttacks array if attack is on ship", () => {
+    testBoard.place(testCarrier, [0, 0], "horizontal");
+    testBoard.receiveAttack([0,0]);
+    testBoard.receiveAttack([0,7]);
+    expect(testBoard.missedAttacks).toEqual([[0,7]]);
+  });
+
+  test("Can detect if all ships are sunk", () => {
+    testBoard.place(testCarrier, [0, 0], "horizontal");
+    for (let i = 0; i < testCarrier.length; i++) {
+      testBoard.receiveAttack([0,i]);
+    }
+    expect(testBoard.allShipsSunk()).toBe(true);
+  });
+
+  test("Can detect if all ships are not sunk", () => {
+    testBoard.place(testCarrier, [0, 0], "horizontal");
+    testBoard.receiveAttack([0,0]);
+    expect(testBoard.allShipsSunk()).toBe(false);
+  });
 });
