@@ -3,6 +3,7 @@ export default class Gameboard {
     this.size = size;
     this.board = this.create();
     this.fleet = [];
+    this.missedAttacks = [];
   }
 
   create() {
@@ -76,21 +77,32 @@ export default class Gameboard {
   receiveAttack(positionArray) {
     const row = positionArray[0];
     const col = positionArray[1];
+    let shipHit = false;
 
+    // check if the position has already been hit
+    // if not, set isHit to true
     if (!this.board[row][col].isHit) {
       this.board[row][col].isHit = true;
     }
     
     // check if any ships in the fleet Array are in the position
     for (let i = 0; i < this.fleet.length; i++) {
-      const ship = this.fleet[i];
-      ship.positions.forEach((shipPosition) => {
+      const currentShip = this.fleet[i];
+      currentShip.positions.forEach((shipPosition) => {
         const [shipRow, shipCol] = shipPosition;
         if (shipRow === row && shipCol === col) {
-          ship.ship.hit();
-          return;
+          currentShip.ship.hit();
+          shipHit = true;
         }
       });
     }
+
+    if (!shipHit) {
+      this.missedAttacks.push(positionArray);
+    }    
+  }
+
+  allShipsSunk() {
+    return this.fleet.every((ship) => ship.ship.isSunk());
   }
 }
