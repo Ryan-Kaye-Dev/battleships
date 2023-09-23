@@ -11,12 +11,14 @@ export default class Gameboard {
     for (let i = 0; i < this.size; i++) {
       let row = [];
       for (let j = 0; j < this.size; j++) {
-        row.push({ hasShip: false, isHit: false });
+        const cell = { hasShip: false, isHit: false, row: i, col: j };
+        row.push(cell);
       }
       board.push(row);
     }
     return board;
   }
+  
 
   isPlacementPossible(ship, positionArray, axis) {
     const row = positionArray[0];
@@ -96,6 +98,7 @@ export default class Gameboard {
         }
       });
     }
+    
 
     if (!shipHit) {
       this.missedAttacks.push(positionArray);
